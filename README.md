@@ -25,6 +25,19 @@ Usage of ./status-page-reporter:
         Releases before this date will be included (default "2024-09-30")
 ```
 
+## Tips
+
+```sh
+# Define the FROM and TO dates based on the current quarter
+export FROM=$(date -j -v-3m -f "%Y-%m-%d" "$(date +'%Y')-$(printf '%02d' $(((($(date +%m)-1)/3)*3+1)))-01" +'%Y-%m-%d')
+# Calculate the end date of the previous quarter
+export TO=$(date -j -v1d -v-1d -v-3m -v+3m -f "%Y-%m-%d" "$FROM" +'%Y-%m-%d')
+
+status-page-reporter --from "${FROM}" --to "${TO}" --output png > heatmap.png
+status-page-reporter --from "${FROM}" --to "${TO}" --output json | jq  'keys | length'
+status-page-reporter --from "${FROM}" --to "${TO}" --output json | jq 'add'
+```
+
 ---
 
 ## :pray: Credits
